@@ -5,4 +5,4 @@ subnet_ids = [
 username = "AWS"
 password = "password"
 vpc_id = "vpc-003f437c9d21dbdf1"
-name = "todo-db"
+name = "todo"
