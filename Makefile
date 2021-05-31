@@ -22,7 +22,7 @@ kube-delete-cluster:
 kube-deploy-cluster:
 	kops update cluster --state=s3://$(shell cd bootstrap && terraform output kops_state_bucket_name | xargs) rmit.k8s.local --yes
 	aws iam attach-role-policy --role-name nodes.rmit.k8s.local --policy-arn arn:aws:iam::aws:policy/AdministratorAccess | echo "Hack"
-	
+
 kube-config:
 	kops export kubecfg --state=s3://$(shell cd bootstrap && terraform output kops_state_bucket_name | xargs )
 
@@ -37,7 +37,7 @@ kube-validate:
 
 namespace-up:
 	kubectl create namespace test
-
+	kubectl create namespace prod
 namespace-down:
 	kubectl delete namespaces test
 
