@@ -133,7 +133,6 @@ jobs:
       reponame: rmit-assignment3-container-repo
     steps:
       - checkout
-
       - run:
           name: Set up
           command: |
