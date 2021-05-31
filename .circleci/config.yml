@@ -61,7 +61,6 @@ jobs:
     steps:
       - checkout
       - install_deps
- 
       - run: |
           cd src/
           npm run test-lint

@@ -1,8 +1,8 @@
 subnet_ids = [
-	"subnet-01bd16cc8e9bb42b2",
-	"subnet-0c17268576eb331d0"
+	"subnet-091e4efe535292fad",
+	"subnet-09cfd11039b1e3259"
 ]
 username = "AWS"
-password = "12345678"
-vpc_id = "vpc-00b7d45dd508d4397"
+password = "password"
+vpc_id = "vpc-003f437c9d21dbdf1"
 name = "todo-db"
