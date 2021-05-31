@@ -17,7 +17,7 @@ spec:
               imagePullPolicy: Always
               name: "todoapp"
               env:
-                - name: mongodb
+                - name: db_url
                   value: mongodb://{.Values.username}:{.Values.password}@{{ .Values.dbhost }}
               ports:
               - containerPort: 27017

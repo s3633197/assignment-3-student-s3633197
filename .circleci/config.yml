@@ -33,23 +33,23 @@ commands:
           sudo mv kops-linux-amd64 /usr/local/bin/kops
           kops export kubecfg rmit.k8s.local --state s3://rmit-kops-state-t4l65n
 
-  smoke-test:
-    parameters:
-      envName: 
-        type: string
-        default: "test"
-    steps:
-      - run:
-          name: Smoke test
-          command: |
-            export endpoint=$(kubectl get service/todo-app -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
-            echo $endpoint
-            export returncode=$(curl -s -o /dev/null -w "%{http_code}" ${endpoint}:443)
-            if [ $returncode -ne "200" ]
-            then
-              echo "Return Code was not 200, it was: ${returncode}"
-              exit 1
-            fi
+  # smoke-test:
+  #   parameters:
+  #     envName: 
+  #       type: string
+  #       default: "test"
+  #   steps:
+  #     - run:
+  #         name: Smoke test
+  #         command: |
+  #           export endpoint=$(kubectl get service/todo-app -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
+  #           echo $endpoint
+  #           export returncode=$(curl -s -o /dev/null -w "%{http_code}" ${endpoint}:443)
+  #           if [ $returncode -ne "200" ]
+  #           then
+  #             echo "Return Code was not 200, it was: ${returncode}"
+  #             exit 1
+  #           fi
 
 
 jobs:
@@ -85,7 +85,7 @@ jobs:
       - store_test_results:
           path: src/test-output/
 
-  e2e:
+  e2e-test:
     docker:
       - image: qawolf/qawolf:v0.9.2
     environment:
@@ -174,7 +174,7 @@ jobs:
           paths:
             - artifacts
 
-  deploy-test:
+  deploy-test-namespace:
     docker:
       - image: cimg/base:2021.05
     environment:
@@ -195,7 +195,7 @@ jobs:
           command: |
             helm upgrade todo artifacts/todo-0.1.0.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/db_connection_string.txt)
   
-  deploy-prod:
+  deploy-prod-namespace:
     docker:
       - image: cimg/base:2021.05
     environment:
@@ -218,14 +218,28 @@ jobs:
           command: |
             helm upgrade todo artifacts/todo-0.1.0.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/dbendpoint.txt),password=$(cat artifacts/dbpass.txt),username=$(cat artifacts/dbuser.txt)
   
-  smoketest-test:
+  smoketest-test-namespace:
     docker:
       - image: cimg/base:2021.05
+    parameters:
+      envName: 
+        type: string
+        default: test
     steps:
       - setup-cd
-      - smoke-test
+      - run:
+          name: Smoke test
+          command: |
+            export endpoint=$(kubectl get service/todo-app -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
+            echo $endpoint
+            export returncode=$(curl -s -o /dev/null -w "%{http_code}" ${endpoint}:443)
+            if [ $returncode -ne "200" ]
+            then
+              echo "Return Code was not 200, it was: ${returncode}"
+              exit 1
+            fi
 
-  smoketest-prod:
+  smoketest-prod-namespace:
     docker:
       - image: cimg/base:2021.05
     parameters:
@@ -265,19 +279,19 @@ workflows:
           requires:
             - deploy-test
             - smoketest-test
-      - deploy-test:
+      - deploy-test-namespace:
           requires:
             - package
-      - smoketest-test:
+      - smoketest-test-namespace:
           requires:
             - deploy-test
-      - e2e:
+      - e2e-test:
           requires:
             - deploy-test
             - smoketest-test
-      - deploy-prod:
+      - deploy-prod-namespace:
           requires:
             - approval
-      - smoketest-prod:
+      - smoketest-prod-namespace:
           requires:
             - deploy-prod
