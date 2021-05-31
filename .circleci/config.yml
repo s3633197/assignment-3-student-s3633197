@@ -277,21 +277,21 @@ workflows:
       - approval:
           type: approval
           requires:
-            - deploy-test
-            - smoketest-test
+            - deploy-test-namespace
+            - smoketest-test-namespace
       - deploy-test-namespace:
           requires:
             - package
       - smoketest-test-namespace:
           requires:
-            - deploy-test
+            - deploy-test-namespace
       - e2e-test:
           requires:
-            - deploy-test
-            - smoketest-test
+            - deploy-test-namespace
+            - smoketest-test-namespace
       - deploy-prod-namespace:
           requires:
             - approval
       - smoketest-prod-namespace:
           requires:
-            - deploy-prod
+            - deploy-prod-namespace
