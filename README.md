@@ -23,7 +23,6 @@ vim ~/.aws/credentials
 ![image](https://user-images.githubusercontent.com/53294143/119211808-f88a7500-bae6-11eb-99b9-f74319d25013.png)
 
 ## Step 2: Bootstrap
-###
 ```
 make bootstrap
 ```
@@ -58,12 +57,22 @@ make namespace-up
 
 ## Step 6: update the vpc id and subnet id in file terraform.tfvars under folder infra
 ## Step 7: circleci
-### push to git hub and run on circleci
+- before push to github and run on circleci update the credential on circleci environment variables
+
 ```
 git add .
 git commit -m "commit"
 git push
 ```
+## Step 8: deploy
+- use the following code to get the external-ip
+```
+kubectl get service -n test
+```
+- update this url to the login.test.js file and register.test.js file under src/test folder and plus :443 at the end of this url
+- push again use the code in step 7
+
+## Step 9: 
 
 
 
