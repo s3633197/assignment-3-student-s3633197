@@ -72,8 +72,9 @@ kubectl get service -n test
 - update this url to the login.test.js file and register.test.js file under src/test folder and plus :443 at the end of this url
 - push again use the code in step 7
 
-## Step 9: 
-
+## Step 9: Visit URL
+- use the url from step 8 plus :443 at the end of this url
+- For example: http://aa024f0666f7045c295848cca93924ff-1745345070.us-east-1.elb.amazonaws.com:443/
 
 
 
