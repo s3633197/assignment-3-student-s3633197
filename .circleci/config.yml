@@ -101,7 +101,7 @@ jobs:
           name: end to end test
           no_output_timeout: 2m
           command: |
-            export ENDPOINT=http://$(kubectl get service/todo-app -n test -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
+            export ENDPOINT=http://$(kubectl get service/todo -n test -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
             echo $ENDPOINT
             cd src
             npm install
@@ -212,7 +212,7 @@ jobs:
       - run:
           name: Smoke test
           command: |
-            export endpoint=$(kubectl get service/todo-app -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
+            export endpoint=$(kubectl get service/todo -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
             echo $endpoint
             export returncode=$(curl -s -o /dev/null -w "%{http_code}" ${endpoint}:443)
             if [ $returncode -ne "200" ]
@@ -233,7 +233,7 @@ jobs:
       - run:
           name: Smoke test
           command: |
-            export endpoint=$(kubectl get service/todo-app -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
+            export endpoint=$(kubectl get service/todo -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
             echo $endpoint
             export returncode=$(curl -s -o /dev/null -w "%{http_code}" ${endpoint}:443)
             if [ $returncode -ne "200" ]
