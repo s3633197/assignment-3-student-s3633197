@@ -33,24 +33,6 @@ commands:
           sudo mv kops-linux-amd64 /usr/local/bin/kops
           kops export kubecfg rmit.k8s.local --state s3://rmit-kops-state-t4l65n
 
-  # smoke-test:
-  #   parameters:
-  #     envName: 
-  #       type: string
-  #       default: "test"
-  #   steps:
-  #     - run:
-  #         name: Smoke test
-  #         command: |
-  #           export endpoint=$(kubectl get service/todo-app -n << parameters.envName >> -o json | jq '.status.loadBalancer.ingress[0].hostname' | sed -e 's/^"//' -e 's/"$//')
-  #           echo $endpoint
-  #           export returncode=$(curl -s -o /dev/null -w "%{http_code}" ${endpoint}:443)
-  #           if [ $returncode -ne "200" ]
-  #           then
-  #             echo "Return Code was not 200, it was: ${returncode}"
-  #             exit 1
-  #           fi
-
 
 jobs:
   build:
@@ -189,11 +171,12 @@ jobs:
             cd artifacts/infra
             make init 
             make up
-            terraform output db_endpoint > ../db_connection_string.txt
+            export endpoint=mongodb://$(terraform output db_user | xargs):$(terraform output db_pass | xargs)@$(terraform output db_endpoint | xargs):27017
+            echo ${endpoint} > ../db_connection_string.txt
       - run:
           name: deploy app
           command: |
-            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/db_connection_string.txt)
+            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbhost=${endpoint}
   
   deploy-prod-namespace:
     docker:
@@ -210,13 +193,12 @@ jobs:
             cd artifacts/infra
             make init 
             make up
-            terraform output db_endpoint > ../dbendpoint.txt
-            terraform output db_user > ../dbuser.txt
-            terraform output db_pass > ../dbpass.txt
+            export endpoint=mongodb://$(terraform output db_user | xargs):$(terraform output db_pass | xargs)@$(terraform output db_endpoint| xargs):27017
+            echo ${endpoint} > ../db_connection_string.txt
       - run:
           name: deploy app
           command: |
-            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=$(cat artifacts/dbendpoint.txt),password=$(cat artifacts/dbpass.txt),username=$(cat artifacts/dbuser.txt)
+            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=${endpoint},password=$(cat artifacts/dbpass.txt),username=$(cat artifacts/dbuser.txt)
   
   smoketest-test-namespace:
     docker:
