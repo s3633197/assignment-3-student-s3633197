@@ -1,3 +1,63 @@
+
+
+# How to use
+
+## Step 1: Updata the Credential 
+### Create a credential file
+```
+wsl
+aws configure
+```
+![image](https://user-images.githubusercontent.com/53294143/119211727-64b8a900-bae6-11eb-9b3f-ea06aacb0c06.png)
+
+
+## Paste your credentials here(in wsl)
+```
+vim ~/.aws/credentials
+```
+![image](https://user-images.githubusercontent.com/53294143/119211774-b82af700-bae6-11eb-9795-b380917ace08.png)
+![image](https://user-images.githubusercontent.com/53294143/119211768-ac3f3500-bae6-11eb-8cf6-6ce85cc6b734.png)
+- press button `i` to edit
+- press button `esc` to exit edit
+- press `shift+:` and type `wq!` to exit
+![image](https://user-images.githubusercontent.com/53294143/119211808-f88a7500-bae6-11eb-99b9-f74319d25013.png)
+
+## Step 2: Bootstrap
+###
+```
+make bootstrap
+```
+
+## Step 3: bucket_name and url
+### update the bucket_name to the value from the value (`kops_state_bucket_name`) in terminal that should show up after step 1
+image
+### update the ECR to the value from the value (`repository-url`) in terminal that should show up after step 1
+### seperate this value to two part by the /
+### update the ECR by the part infront /
+### update the reponame by the part after /
+
+## Step 4: create cluster
+```
+make kube-create-cluster
+make kube-secret
+make kube-deploy-cluster
+make kube-config
+make kube-validate
+```
+
+## Step 5: create namespaces (test and prod)
+```
+make namespace-up
+```
+
+## Step 6: update the vpc id and subnet id in file terraform.tfvars under folder infra
+## Step 7: 
+
+
+
+
+
+
 # Simple Todo App with MongoDB, Express.js and Node.js
 The ToDo app uses the following technologies and javascript libraries:
 * MongoDB

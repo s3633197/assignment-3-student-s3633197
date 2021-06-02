@@ -16,8 +16,8 @@ spec:
             - image: {{.Values.image}}
               imagePullPolicy: Always
               name: "todo-app"
-            #   env:
-            #     - name: DB_URL
-            #       value: {{.Values.dbhost}}
+              env:
+                - name: DB_URL
+                  value: {{.Values.dbhost}}
               ports:
               - containerPort: 27017

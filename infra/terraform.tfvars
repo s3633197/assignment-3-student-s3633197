@@ -1,6 +1,6 @@
 subnet_ids = [
 	"subnet-091e4efe535292fad",
-	"subnet-07ba482626d804d63"
+	"subnet-0a4e4e41a7c43c5fb"
 ]
 username = "AWS"
 password = "password"
