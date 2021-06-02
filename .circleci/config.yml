@@ -247,12 +247,12 @@ workflows:
   build-test-package:
     jobs:
       - build
-      - integration-test:
-          requires: 
-            - build
+      # - integration-test:
+      #     requires: 
+      #       - build
       - package:
-          requires:
-            - integration-test
+          # requires:
+          #   - integration-test
           filters:
             branches:
               only: master
