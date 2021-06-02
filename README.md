@@ -29,12 +29,18 @@ make bootstrap
 ```
 
 ## Step 3: bucket_name and url
-### update the bucket_name to the value from the value (`kops_state_bucket_name`) in terminal that should show up after step 1
-image
-### update the ECR to the value from the value (`repository-url`) in terminal that should show up after step 1
-### seperate this value to two part by the /
-### update the ECR by the part infront /
-### update the reponame by the part after /
+- Four values will show up in the terminal after step 1
+```
+dynamoDb_lock_table_name = "RMIT-locktable-3dfyjp"
+kops_state_bucket_name = "rmit-kops-state-3dfyjp"
+repository-url = "828195990727.dkr.ecr.us-east-1.amazonaws.com/rmit-assignment3-container-repo"
+tf_state_bucket = "rmit-tfstate-3dfyjp"
+```
+- update the kops_state_bucket_name to the config.yml under .circleci folder
+- seperate repository value to two part by the /
+- update the ECR by the part infront /
+- update the reponame by the part after /
+- update the dynamoDb_lock_table_name and kops_state_bucket_name to the makefile under infra folder
 
 ## Step 4: create cluster
 ```
@@ -51,7 +57,13 @@ make namespace-up
 ```
 
 ## Step 6: update the vpc id and subnet id in file terraform.tfvars under folder infra
-## Step 7: 
+## Step 7: circleci
+### push to git hub and run on circleci
+```
+git add .
+git commit -m "commit"
+git push
+```
 
 
 
