@@ -176,7 +176,7 @@ jobs:
       - run:
           name: deploy app
           command: |
-            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbhost=${endpoint}
+            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbhost=${cat artifacts/db_connection_string.txt}
   
   deploy-prod-namespace:
     docker:
@@ -198,7 +198,7 @@ jobs:
       - run:
           name: deploy app
           command: |
-            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=${endpoint},password=$(cat artifacts/dbpass.txt),username=$(cat artifacts/dbuser.txt)
+            helm upgrade todo artifacts/todo-0.1.0.tgz -i -n prod --wait --set image=$(cat artifacts/image.txt),dbhost=${cat artifacts/db_connection_string.txt}
   
   smoketest-test-namespace:
     docker:
